@@ -1,9 +1,9 @@
 _1-1 Comparison of running times
-For each function f .n/ and time t in the following table, determine the largest
-size n of a problem that can be solved in time t , assuming that the algorithm to
-solve the problem takes f .n/ microseconds._
-
-![[Pasted image 20241116144304.png]]
+	a cell sheet to fill out was provided when different `f(n)` values where
+		... the function could be `f(n^2)`, or `f(n!)`
+			I did some math on a whiteboard for this even if it's wrong
+				it got the idea in my head that different functions for factors
+					... of n can cause exceptional differences in run times
 
 	log(n) ... 1 second, 2^(10^6)... 1 century, 2^(3.15x10^15) ... GYATT DANG
 	sqrt(n) ... 1 second, ~10^12... 1 century, 9.9225(10^30) ... wew!

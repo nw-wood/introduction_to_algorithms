@@ -15,6 +15,7 @@ fn insertion_sort(arr: &mut Vec<i32>) {
     }
 }
 ```
+
 the exercise asks us to illustrate the operation of insertion sort on the sequence
 	31, 41, 59, 26, 41, 58
 		step-by-step
@@ -44,6 +45,7 @@ fn main() {
     println!("{}", result); // Output: 15
 }
 ```
+
 the exercise asks us to use loop invariant to explain the sum_array function
 	loop invariant:
 		init:
@@ -74,6 +76,7 @@ fn insertion_sort_decreasing(arr: &mut Vec<i32>) {
     }
 }
 ```
+
 the exercise asks 
 	to modify insert-sort to sort in monotonically decreasing order
 		so change the comparison in the inner loop
@@ -90,6 +93,7 @@ fn linear_search(arr: &Vec<i32>, x: i32) -> Option<usize> {
     None // NIL
 }
 ```
+
 this exercise asks us to use loop invariants to describe the above linear search algo
 	loop invariant:
 		init:
@@ -117,6 +121,7 @@ fn add_binary_integers(a: &Vec<i32>, b: &Vec<i32>, n: usize) -> Vec<i32> {
     c
 }
 ```
+
 the exercise asks us to come up with a procedure for adding two binary integers that
 	...takes two input arrays, and adds them together, to produce an array c
 		...because this is in rust a vector is used to store c as
@@ -124,114 +129,85 @@ the exercise asks us to come up with a procedure for adding two binary integers 
 				... at compile time
 				
 
+***2.3-1 merge sort illustration***
+	illustrate merge sort on 3, 41, 52, 26, 38, 57, 9, 49
+		divide, divide the array in half
+		conquer, sort each half recursively
+		combine, merge the halves back together
+			`3, 41, 52, 26`,       `38, 57, 9, 49`
+				`3, 41,`      `52, 26,`       `38, 57,`     `9, 49`
+					`3`  `41`  `52` `26`  `38` `57` `9` `49`
+						`3, 41,`      `26, 52`      `38, 57`    `9, 49`
+							`3, 26, 41, 52`    `9, 38, 49, 57`
+		sorted: `3, 9, 26, 38, 41, 49, 52, 57`
 
+***2.3-2 argument for merge-sort condition***
+	in merge sort,  if p < r ensures that a recursive call is only valid when `p <= r`
+		if p > r the sub array is empty so the func immediately terminates
+			since the call ensures `n >= 1` then `1` is always less than `n`, and so
+				then `p != r` can be expressed to say that the length of `r` has not
+					decreased past the value of p
+						_although this isn't the best idea_
 
+***2.3-3 loop invariant for merge procedure***
+	invariant for the while loop in the merge proc
+		the while loop in merge ensures that at the start of each iteration
+			... the left portion of the merged subarray is less than or
+				...equal to the right portion
+	specifically it maintains:
+		the sub arrays are sorted
+			the next element to be placed in the merged subarray is the smallest
+				of each comparison
+	to prove correctness:
+		invariant
+			init: the sub arrays are sorted, and the left is equal to or less than
+				... the right array
+			maintains:
+				through each loop we maintain that the items are placed back into
+					...the array in sorted order by incrementing through each array
+						...and taking the lesser of each value
+							...then finally when an array is empty is iterates
+								...through the remaining array adding the items
+									...that are already sorted back into the array
+			termination:
+				when the items are back in the provided array that the sorted items
+					were placed into the procedure terminates having iterated through
+						each item
 
+***2.3-4 inductive proof for recurrence***
+	for n <= 2, being a power of 2, the recur was
+		`T(n) = 2T(n/2) + 2`
+	base case:
+		`T(2) = 2`
+		
+***2.3-5 recursive insertion sort***
 
+```rust
+fn insertion_sort_recursive(arr: &mut [usize]) {
+    if arr.len() <= 1 {
+        return;
+    }
+    let len = arr.len();
+	insertion_sort_recursive(&mut arr[0..len - 1]);
+    insert(arr);
+}
+fn insert(arr: &mut [usize]) {
+    let len = arr.len();
+    let mut i = len - 2;
+    let last = arr[len - 1].clone();
+    while arr[i] > last {
+        arr[i + 1] = arr[i].clone();
+        if i == 0 { break; }
+        i -= 1;
+    }
+    arr[i + 1] = last;
+}
+```
 
+`very happy to have covered this comparison to insertion sort`
+	`it's made me think that I need to spent more time on`
+		`... how exactly to solve more problems recursively`
+			`just for more practice thinking this way`
 
-
-
-
-
-
-
-
-
-_2.1-1 using fig 2.2 as the model illustrate the operation of insert sort on an array containing 31 41 59 26 41 58... so perhaps in rust?...
-! ctrl+f 'insertion_sort(a: &mut'
-2.1-2 using the ps for sum-array on the next page that computes adding n numbers in arr a together... state a loop invariant for the procedure
-and use init, maint, and term properties to show that SUM-ARRAY returns the sum of the numbers in a[1:n]
-2.1-3 reverse the insertion-sort algo
-2.1-4 write a linear searching algo and prove it's correctness in the invariant procedure
-2.1-5 requires braining out...
-given the problem of adding 2 n-bit binary integers a, and b...
-...that are stored in two n-element arrays a[0:n -1], and b[0:n-1]...
-where each element is either 0, or 1...
-a = the sum of items constrained by (n-1, i=0) for each product of 2 raised by i...
-and b is the same function... may be misreading that ACTUAL FUNC MATH NOTATION
-the sum c = a + b of the two integers should be stored in a binary form in an (n+1)-elemtn array C[0:n]...
-where c = ... similar constraints for summation except n, and i=0....
-write a procedure ADD-BINARY-INTEGERS that takes A and B input arrays with length n
-and returns array C holding the sum of A and B . . ?
-2.1-5 finished going for walk and an hour and half before class...
-gpt summary of the above which I pretty much understood... the sum of 2 arrays of bits
-gpt analysis
-two binary numbers a, and b
-a[0:n-1] represents binary number a, in little endian format (least significant at 0)
-b[0:n-1]: in the same format
-... is LaTeX what wikipedia uses?
-... OKAY I can read it
-... sum of numbers between i and n-1 where i starts at 0...
-for each index of array A, index * 2 ^ i
-... the problem states prior to the summation function that a and b
-are 2 n-bit binary numbers.. fall back
-an integer n, which is the length of A and B that is considered
-...
-goal: write procedure add-binary-integers that takes input a, and b, along with n, and returns array C holding
-the sum of a and b
-other words: computer the binary sum c = a + b, and the result in array c,
-since a and b each have n bits their sum could require up to n + 1 bits to handle any potential
-overflow or carryin
-the result should be stored in an n+1-element array, c[0:n], also in little endian format
-binary addition...
-each position i in the arrays a and b correspond to binary digit 0 or 1, and contribute...
-a[i] * 2 ^ i and the same for b to the values of a and b, respectively
-expected output:
-the result should be in an array c of length n + 1???
-this array will store the sum of the binary numbers in binary form
-loop through each bit position i from 0 through n - 1:
-add a[i], and b[i] - and any carry from the previous position....
-determine the new c[i] (the sum mod 2) and update the carry for
-the next position
-handle the final carry
-!!! solved this last night for both little and big endian binary addition 11/10/24
-// moving on to 2.2!
-
-e x e r c i s e s . . . . .
-
-expression the function n^3 / 1000 + 100n^2 - 100n + 3 in terms of theta notation...
-
-would it be O(n^3 + n^2) I wonder, or just O(n^3)...?
-
-  
-
-consider sorting n numbers in array a[1:n] by first finding the smallest element of a and exchanging it with the elemtn in a[1] - then find the
-
-smallest element of a[2:n] and exchange it with a[2]... and so on.... continue in this manner for the first n-1 elements of a - write PS for
-
-this algo... which is known as SELECTION SORT, what loop invariant does this algo maintain? why does it need to run for only
-
-n-1 elements rather than for all n elements? give the worst case run time for selection sort theta notaiton -
-
-is the best-case running time any better?
-
-... my thoughts....
-
-since this algo needs to sort through the entire subarray n-1 every single time to find the smallest that NO it is not any better
-
-in fact in all but one case I believe it to be expressly worse than insertion sort where the one case where the input is backwards
-
-entirely...
-
-since it will be iterating as many times of this the theta notation would be O(n^2) again, however, the worst case
-
-is ALWAYS the case where as with insertion sort it is not ALWAYS the worst case...
-
-CLAUDE: VERY INSIGHTFUL, AND ACCURATE GREAT JOB FAM!
-
-consider linear search again... how many elements of the input array need to be checked on average... assuming that the element is equally possibly in
-
-any index in the array... and additionally how baout the worst case
-
-in the average case O(n/2) since approximately half would be looked through on average, and in the worst case O(n) since the search index either isn't
-
-present or is in the last index of the array
-
-CLAUDE: EXACTLY!
-
-how can any sorting algo be modified to have a good best-case run time?
-
-check if it's sorted ahead of sorting
-
-CLAUDE: GREAT! yes, that is a good idea
+***2.3-6 binary search***
+	
