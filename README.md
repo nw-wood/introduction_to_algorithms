@@ -15,6 +15,7 @@ there are many code examples for the exercise in the book converted to rust
 and many answers to the exercises provided
 
 many text transformers have been used in the process of interpretting the book
+
 it should be assumed that by reading through these notes you will spoil the book
 for yourself immediately
 
